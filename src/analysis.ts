@@ -5,9 +5,13 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY,
-});
+let _groq: Groq | null = null;
+function getGroq(): Groq {
+  if (!_groq) {
+    _groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+  }
+  return _groq;
+}
 
 // Using a fast model for Map steps and a larger model for synthesis if needed,
 // but Llama 3 8B or 70B works well for both. Let's use 8B for speed on batches, 70B for synthesis.
@@ -24,7 +28,7 @@ export async function processBatch(batch: Review[], type: 'critical' | 'positive
   const userPrompt = `Reviews Batch:\n${reviewsText}\n\nPlease extract the themes and exact quotes as requested.`;
 
   try {
-    const completion = await groq.chat.completions.create({
+    const completion = await getGroq().chat.completions.create({
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
@@ -55,7 +59,7 @@ IMPORTANT: The email_summary MUST be under 250 words. The quotes MUST be exact v
   const userPrompt = `Critical Themes (from all batches):\n${criticalThemes.join('\n\n---\n\n')}\n\nPositive Themes (from all batches):\n${positiveThemes.join('\n\n---\n\n')}\n\nPlease generate the JSON report.`;
 
   try {
-    const completion = await groq.chat.completions.create({
+    const completion = await getGroq().chat.completions.create({
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
