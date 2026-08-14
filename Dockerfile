@@ -13,5 +13,8 @@ COPY src/ ./src/
 # Build TypeScript → JavaScript
 RUN npx tsc
 
-# Start the scheduler
-CMD ["node", "dist/scheduler.js"]
+# Expose the API port (Railway uses PORT env var)
+EXPOSE 3000
+
+# Start the API server (includes scheduler)
+CMD ["node", "dist/server.js"]

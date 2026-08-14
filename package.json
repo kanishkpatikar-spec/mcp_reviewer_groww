@@ -2,13 +2,14 @@
   "name": "mcp_reviewer_project",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/scheduler.js",
+  "main": "dist/server.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
     "build": "tsc",
-    "start": "node dist/scheduler.js",
+    "start": "node dist/server.js",
+    "dev": "npx tsx src/server.ts",
     "pipeline": "npx tsx src/orchestrator.ts",
     "scheduler": "npx tsx src/scheduler.ts",
     "scheduler:now": "npx tsx src/scheduler.ts --run-now",
@@ -25,12 +26,16 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
     "app-store-scraper": "^0.18.0",
+    "cors": "^2.8.6",
     "dotenv": "^17.4.2",
+    "express": "^5.2.1",
     "google-play-scraper": "^10.1.3",
     "groq-sdk": "^1.5.0",
     "node-cron": "^4.6.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
     "@types/node": "^26.2.0",
     "@types/node-cron": "^3.0.11",
     "ts-node": "^10.9.2",
