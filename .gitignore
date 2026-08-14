@@ -6,6 +6,7 @@ dist/
 !package.json
 !package-lock.json
 !tsconfig.json
+!vercel.json
 src/**/*.js  
 src/**/*.js.map  
 src/**/*.d.ts  
