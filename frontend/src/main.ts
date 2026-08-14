@@ -2,8 +2,8 @@ import './style.css';
 
 // ─── Configuration ────────────────────────────────────────────────────────────
 
-// Use the environment variable if available, otherwise default to the Railway backend
-const API_URL = import.meta.env.VITE_API_URL || 'https://mcpreviewergroww-production.up.railway.app';
+// Use the environment variable if available, otherwise use relative path (since it will be served by the same backend)
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 // ─── Interfaces ───────────────────────────────────────────────────────────────
 

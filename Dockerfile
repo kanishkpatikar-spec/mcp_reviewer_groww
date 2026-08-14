@@ -10,7 +10,11 @@ RUN npm ci
 COPY tsconfig.json ./
 COPY src/ ./src/
 
-# Build TypeScript → JavaScript
+# Install frontend dependencies and build frontend
+COPY frontend/ ./frontend/
+RUN cd frontend && npm ci && npm run build
+
+# Build TypeScript backend
 RUN npx tsc
 
 # Expose the API port (Railway uses PORT env var)

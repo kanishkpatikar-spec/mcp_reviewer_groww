@@ -15,6 +15,7 @@ import cors from 'cors';
 import * as fs from 'fs/promises';
 import * as dotenv from 'dotenv';
 import cron from 'node-cron';
+import path from 'path';
 import { runFullPipeline, type PipelineResult } from './orchestrator.js';
 
 dotenv.config();
@@ -161,6 +162,12 @@ async function main() {
   console.log('');
 
   // Start HTTP server
+  app.use(express.static(path.join(process.cwd(), 'frontend/dist')));
+  
+  app.get('*', (_req, res) => {
+    res.sendFile(path.join(process.cwd(), 'frontend/dist/index.html'));
+  });
+
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`[Server] 🟢 API server listening on port ${PORT}`);
     console.log(`[Server] 🟢 Scheduler active. Waiting for cron trigger...\n`);
