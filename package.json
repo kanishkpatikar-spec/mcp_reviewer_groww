@@ -2,11 +2,13 @@
   "name": "mcp_reviewer_project",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/scheduler.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
+    "build": "tsc",
+    "start": "node dist/scheduler.js",
     "pipeline": "npx tsx src/orchestrator.ts",
     "scheduler": "npx tsx src/scheduler.ts",
     "scheduler:now": "npx tsx src/scheduler.ts --run-now",
