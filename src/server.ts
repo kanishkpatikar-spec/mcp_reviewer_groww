@@ -164,7 +164,7 @@ async function main() {
   // Start HTTP server
   app.use(express.static(path.join(process.cwd(), 'frontend/dist')));
   
-  app.get('*', (_req, res) => {
+  app.get('/(.*)', (_req, res) => {
     res.sendFile(path.join(process.cwd(), 'frontend/dist/index.html'));
   });
 
