@@ -1,0 +1,418 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Feedback Pulse</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Outfit:wght@600;700&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#1c1b1b",
+                        "surface-tint": "#00dfc1",
+                        "surface-container-high": "#232c29",
+                        "on-secondary-container": "#bab8b7",
+                        "on-primary-container": "#006c5c",
+                        "background": "#0d1513",
+                        "secondary": "#c8c6c5",
+                        "on-error": "#690005",
+                        "on-secondary-fixed-variant": "#474646",
+                        "surface-container-lowest": "#08100e",
+                        "primary-fixed-dim": "#00dfc1",
+                        "outline": "#83948f",
+                        "surface-variant": "#2e3734",
+                        "tertiary-fixed": "#e5e2e1",
+                        "on-tertiary": "#313030",
+                        "inverse-primary": "#006b5b",
+                        "primary": "#d7fff3",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "inverse-on-surface": "#2a3230",
+                        "surface-container-highest": "#2e3734",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "on-secondary": "#313030",
+                        "secondary-container": "#4a4949",
+                        "surface-dim": "#0d1513",
+                        "tertiary": "#f9f5f5",
+                        "on-tertiary-fixed-variant": "#474646",
+                        "on-primary": "#00382f",
+                        "on-surface-variant": "#b9cac4",
+                        "secondary-fixed": "#e5e2e1",
+                        "primary-fixed": "#26fedc",
+                        "surface-container": "#19211f",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-container": "#dcd9d8",
+                        "outline-variant": "#3a4a46",
+                        "inverse-surface": "#dbe5e0",
+                        "error-container": "#93000a",
+                        "tertiary-fixed-dim": "#c9c6c5",
+                        "on-primary-fixed-variant": "#005144",
+                        "on-background": "#dbe5e0",
+                        "error": "#ffb4ab",
+                        "on-surface": "#dbe5e0",
+                        "on-tertiary-container": "#605f5e",
+                        "primary-container": "#00f5d4",
+                        "on-primary-fixed": "#00201a",
+                        "surface-container-low": "#151d1b",
+                        "surface-bright": "#323b38",
+                        "surface": "#0d1513"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "20px",
+                        "margin-desktop": "40px",
+                        "unit": "8px",
+                        "gutter": "24px",
+                        "container-max": "1440px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-md": ["Outfit"],
+                        "body-md": ["Inter"],
+                        "headline-sm": ["Outfit"],
+                        "label-caps": ["Inter"],
+                        "display-lg": ["Outfit"],
+                        "display-lg-mobile": ["Outfit"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Base Animations */
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes meshMove {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(0, 223, 193, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 223, 193, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 223, 193, 0); }
+        }
+
+        /* Animation Classes */
+        .animate-fade-up {
+            animation: fadeSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+        .animate-slide-left {
+            animation: slideInLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+        .animate-slide-right {
+            animation: slideInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+        
+        /* Stagger Delays */
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-400 { animation-delay: 400ms; }
+        .delay-500 { animation-delay: 500ms; }
+        .delay-600 { animation-delay: 600ms; }
+
+        /* Background */
+        .mesh-bg {
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(0, 223, 193, 0.05), transparent 35%),
+                radial-gradient(circle at 85% 30%, rgba(0, 223, 193, 0.05), transparent 35%);
+            background-size: 200% 200%;
+            animation: meshMove 20s ease-in-out infinite;
+        }
+
+        /* Card Styles & Hover Effects */
+        .glass-card {
+            background: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 40px 60px -15px rgba(0, 0, 0, 0.8);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.2);
+            z-index: 10;
+        }
+        
+        /* Specific Glows */
+        .hover-glow-error:hover {
+            box-shadow: 0 10px 40px -10px rgba(255, 180, 171, 0.2);
+            border-color: rgba(255, 180, 171, 0.3);
+        }
+        .hover-glow-feature:hover {
+            box-shadow: 0 10px 40px -10px rgba(0, 223, 193, 0.2);
+            border-color: rgba(0, 223, 193, 0.3);
+        }
+
+        .text-gradient {
+            background: linear-gradient(to right, #d7fff3, #00dfc1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Button Enhancements */
+        .btn-pulse {
+            animation: pulseGlow 2s infinite;
+        }
+        .btn-glow:hover {
+            box-shadow: 0 0 20px rgba(0, 223, 193, 0.6);
+            transform: translateY(-2px) scale(1.05);
+        }
+        .btn-glow:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        /* Loader CSS */
+        .loader {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Accessibility: Prefers Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            .btn-pulse {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-[#0a0a0a] text-on-surface font-body-md min-h-screen mesh-bg">
+<!-- TopNavBar -->
+<header class="bg-surface/80 dark:bg-surface/80 backdrop-blur-xl docked full-width top-0 sticky z-50 border-b border-white/10 shadow-[0_40px_60px_-15px_rgba(0,0,0,0.8)]">
+<div class="flex justify-between items-center w-full px-margin-desktop py-4">
+<div class="flex items-center gap-4">
+<span class="font-display-lg text-display-lg bg-clip-text text-transparent bg-gradient-to-r from-primary to-surface-tint">Feedback Pulse</span>
+</div>
+<div class="flex items-center gap-6">
+<button class="material-symbols-outlined text-primary dark:text-primary-fixed-dim font-headline-sm text-headline-sm hover:bg-white/5 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] p-2 rounded-full hover:scale-110" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-primary dark:text-primary-fixed-dim font-headline-sm text-headline-sm hover:bg-white/5 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] p-2 rounded-full hover:scale-110" data-icon="settings">settings</button>
+<img alt="User profile" class="w-10 h-10 rounded-full border border-white/20 object-cover hover:scale-105 transition-transform duration-300" data-alt="A small circular avatar of a professional user in a sleek, dark-themed UI context. High-end, photorealistic, subtle lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXorsUJrUSJzFOv-_Jw85aEMq-t6oQXbILmI1PGFKJ_NZtjHBPi4XjIx-V6jSy_DWZ4QVOiWuTce8-MuaQBimrVQKtalJrjPulLie6V-2mi1pUgp0lX-MeoJjEsh8L_NVX1Tso3XWfCR6VQjM5_YydBRVImPMf4PqxNzEnVJv0iFlxR9AQYqnpn9AP9Z9EbysFpGdS8CJjFINri-uaR5OPwBOCcwn509K926iDEMa4jwMJjRGMPKOpKw">
+<button class="bg-gradient-to-r from-primary to-surface-tint text-on-primary px-6 py-2 rounded-lg font-headline-sm text-headline-sm btn-glow btn-pulse transition-all duration-300 flex items-center gap-2" id="runNowBtn">
+<span id="runNowText" class="">Run Now</span>
+<div class="loader hidden" id="runNowLoader"></div>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="max-w-container-max mx-auto px-margin-desktop py-12">
+<!-- Header & Metrics -->
+<div class="mb-12">
+<h1 class="font-display-lg text-display-lg mb-8 animate-fade-up">The Weekly Pulse</h1>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="glass-card p-6 rounded-xl animate-fade-up delay-100">
+<div class="text-on-surface-variant font-label-caps text-label-caps mb-2">Last Run</div>
+<div class="font-headline-md text-headline-md text-primary">Oct 24, 2023</div>
+</div>
+<div class="glass-card p-6 rounded-xl animate-fade-up delay-200">
+<div class="text-on-surface-variant font-label-caps text-label-caps mb-2">Total Reviews</div>
+<div class="font-headline-md text-headline-md text-primary">1,240</div>
+</div>
+<div class="glass-card p-6 rounded-xl animate-fade-up delay-300">
+<div class="text-on-surface-variant font-label-caps text-label-caps mb-2">Sentiment</div>
+<div class="font-headline-md text-headline-md text-surface-tint">68% Positive</div>
+</div>
+</div>
+</div>
+<!-- Split Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter mb-12 overflow-hidden">
+<!-- Left: Critical Issues -->
+<section class="space-y-6">
+<h2 class="font-headline-md text-headline-md border-b border-white/10 pb-4 animate-slide-left">Critical Issues</h2>
+<div class="glass-card hover-glow-error p-6 rounded-xl border-t border-t-[rgba(255,255,255,0.1)] border-b border-b-[rgba(255,255,255,0.05)] border-x border-x-[rgba(255,255,255,0.05)] animate-slide-left delay-100">
+<div class="flex justify-between items-start mb-4">
+<h3 class="font-headline-sm text-headline-sm text-error">Checkout Crash</h3>
+<span class="bg-error/10 text-error px-2 py-1 rounded font-label-caps text-label-caps">High Impact</span>
+</div>
+<div class="bg-surface-container-high/50 p-4 rounded-lg italic text-on-surface-variant font-body-sm text-body-sm relative">
+<span class="material-symbols-outlined absolute -top-3 -left-2 text-surface-variant" style="font-size: 32px;">format_quote</span>
+                        "App crashes every time I try to add a new credit card on my iPhone 14. Very frustrating."
+                    </div>
+</div>
+<div class="glass-card hover-glow-error p-6 rounded-xl border-t border-t-[rgba(255,255,255,0.1)] border-b border-b-[rgba(255,255,255,0.05)] border-x border-x-[rgba(255,255,255,0.05)] animate-slide-left delay-200">
+<div class="flex justify-between items-start mb-4">
+<h3 class="font-headline-sm text-headline-sm text-error">Android Login Loop</h3>
+<span class="bg-error/10 text-error px-2 py-1 rounded font-label-caps text-label-caps">Medium Impact</span>
+</div>
+<div class="bg-surface-container-high/50 p-4 rounded-lg italic text-on-surface-variant font-body-sm text-body-sm relative">
+<span class="material-symbols-outlined absolute -top-3 -left-2 text-surface-variant" style="font-size: 32px;">format_quote</span>
+                        "Stuck in a loop logging in with Google on my Pixel 7. Keeps asking for permissions."
+                    </div>
+</div>
+<div class="glass-card hover-glow-error p-6 rounded-xl border-t border-t-[rgba(255,255,255,0.1)] border-b border-b-[rgba(255,255,255,0.05)] border-x border-x-[rgba(255,255,255,0.05)] animate-slide-left delay-300">
+<div class="flex justify-between items-start mb-4">
+<h3 class="font-headline-sm text-headline-sm text-error">Slow Image Loading</h3>
+<span class="bg-error/10 text-error px-2 py-1 rounded font-label-caps text-label-caps">Ongoing</span>
+</div>
+<div class="bg-surface-container-high/50 p-4 rounded-lg italic text-on-surface-variant font-body-sm text-body-sm relative">
+<span class="material-symbols-outlined absolute -top-3 -left-2 text-surface-variant" style="font-size: 32px;">format_quote</span>
+                        "Product images take forever to load on Wi-Fi. It's not my connection."
+                    </div>
+</div>
+</section>
+<!-- Right: Feature Requests -->
+<section class="space-y-6">
+<h2 class="font-headline-md text-headline-md border-b border-white/10 pb-4 animate-slide-right">Feature Requests</h2>
+<div class="glass-card hover-glow-feature p-6 rounded-xl border-t border-t-[rgba(255,255,255,0.1)] border-b border-b-[rgba(255,255,255,0.05)] border-x border-x-[rgba(255,255,255,0.05)] animate-slide-right delay-100">
+<div class="flex justify-between items-start mb-4">
+<h3 class="font-headline-sm text-headline-sm text-surface-tint">Dark Mode</h3>
+<span class="bg-surface-tint/10 text-surface-tint px-2 py-1 rounded font-label-caps text-label-caps">High Demand</span>
+</div>
+<div class="bg-surface-container-high/50 p-4 rounded-lg italic text-on-surface-variant font-body-sm text-body-sm relative">
+<span class="material-symbols-outlined absolute -top-3 -left-2 text-surface-variant" style="font-size: 32px;">format_quote</span>
+                        "Please add a dark mode! The bright white hurts my eyes at night while browsing."
+                    </div>
+</div>
+<div class="glass-card hover-glow-feature p-6 rounded-xl border-t border-t-[rgba(255,255,255,0.1)] border-b border-b-[rgba(255,255,255,0.05)] border-x border-x-[rgba(255,255,255,0.05)] animate-slide-right delay-200">
+<div class="flex justify-between items-start mb-4">
+<h3 class="font-headline-sm text-headline-sm text-surface-tint">Apple Pay Support</h3>
+<span class="bg-surface-tint/10 text-surface-tint px-2 py-1 rounded font-label-caps text-label-caps">Medium Demand</span>
+</div>
+<div class="bg-surface-container-high/50 p-4 rounded-lg italic text-on-surface-variant font-body-sm text-body-sm relative">
+<span class="material-symbols-outlined absolute -top-3 -left-2 text-surface-variant" style="font-size: 32px;">format_quote</span>
+                        "Would be much faster to checkout if you supported Apple Pay."
+                    </div>
+</div>
+<div class="glass-card hover-glow-feature p-6 rounded-xl border-t border-t-[rgba(255,255,255,0.1)] border-b border-b-[rgba(255,255,255,0.05)] border-x border-x-[rgba(255,255,255,0.05)] animate-slide-right delay-300">
+<div class="flex justify-between items-start mb-4">
+<h3 class="font-headline-sm text-headline-sm text-surface-tint">Gift Cards</h3>
+<span class="bg-surface-tint/10 text-surface-tint px-2 py-1 rounded font-label-caps text-label-caps">Rising</span>
+</div>
+<div class="bg-surface-container-high/50 p-4 rounded-lg italic text-on-surface-variant font-body-sm text-body-sm relative">
+<span class="material-symbols-outlined absolute -top-3 -left-2 text-surface-variant" style="font-size: 32px;">format_quote</span>
+                        "I want to buy a gift card for my sister but can't find the option anywhere."
+                    </div>
+</div>
+</section>
+</div>
+<!-- Bottom Section: Actionable Ideas -->
+<section id="actionable-ideas-section">
+<h2 class="font-headline-md text-headline-md border-b border-white/10 pb-4 mb-6 animate-fade-up delay-400">Actionable Ideas</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="glass-card p-6 rounded-xl flex items-start gap-4 border-t border-t-[rgba(255,255,255,0.1)] border-b border-b-[rgba(255,255,255,0.05)] border-x border-x-[rgba(255,255,255,0.05)] delay-400">
+<span class="material-symbols-outlined text-primary mt-1" data-icon="task_alt">task_alt</span>
+<div>
+<h4 class="font-headline-sm text-headline-sm mb-2">Investigate iOS Checkout</h4>
+<p class="text-on-surface-variant font-body-sm text-body-sm">Prioritize crash logs for iOS 14+ related to payment gateway initialization.</p>
+</div>
+</div>
+<div class="glass-card p-6 rounded-xl flex items-start gap-4 border-t border-t-[rgba(255,255,255,0.1)] border-b border-b-[rgba(255,255,255,0.05)] border-x border-x-[rgba(255,255,255,0.05)] delay-500">
+<span class="material-symbols-outlined text-primary mt-1" data-icon="task_alt">task_alt</span>
+<div>
+<h4 class="font-headline-sm text-headline-sm mb-2">Schedule Dark Mode Spike</h4>
+<p class="text-on-surface-variant font-body-sm text-body-sm">Allocate engineering time to evaluate effort for implementing native dark mode support.</p>
+</div>
+</div>
+<div class="glass-card p-6 rounded-xl flex items-start gap-4 border-t border-t-[rgba(255,255,255,0.1)] border-b border-b-[rgba(255,255,255,0.05)] border-x border-x-[rgba(255,255,255,0.05)] delay-600">
+<span class="material-symbols-outlined text-primary mt-1" data-icon="task_alt">task_alt</span>
+<div>
+<h4 class="font-headline-sm text-headline-sm mb-2">Optimize Image CDN</h4>
+<p class="text-on-surface-variant font-body-sm text-body-sm">Review current CDN configuration and caching strategies for product images.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<script>
+        document.getElementById('runNowBtn').addEventListener('click', function() {
+            const btn = this;
+            const text = document.getElementById('runNowText');
+            const loader = document.getElementById('runNowLoader');
+            
+            if (loader.classList.contains('hidden')) {
+                // Start loading
+                text.textContent = 'Running...';
+                loader.classList.remove('hidden');
+                btn.classList.add('opacity-80', 'cursor-not-allowed');
+                btn.classList.remove('btn-pulse');
+                
+                // Mock network request delay
+                setTimeout(() => {
+                    text.textContent = 'Run Now';
+                    loader.classList.add('hidden');
+                    btn.classList.remove('opacity-80', 'cursor-not-allowed');
+                    btn.classList.add('btn-pulse');
+                }, 2000);
+            }
+        });
+
+        // Optional: Intersection Observer for scroll animations (if not handled purely by initial CSS load delays)
+        // For this design, initial load animations via CSS delays are sufficient for the visible viewport.
+    </script>
+
+
+<script>
+(function() {
+    const section = document.getElementById('actionable-ideas-section');
+    const cards = section.querySelectorAll('.glass-card');
+    
+    // Respect prefers-reduced-motion
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const observerOptions = {
+        root: null,
+        threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                cards.forEach((card, index) => {
+                    // Re-add animation class with a manual delay based on index
+                    setTimeout(() => {
+                        card.classList.add('animate-fade-up');
+                        card.style.opacity = '1';
+                    }, index * 150);
+                });
+                // Only play once per session
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    observer.observe(section);
+})();
+</script></body></html>

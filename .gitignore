@@ -1,0 +1,12 @@
+node_modules/
+.env
+dist/
+*.log
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+src/**/*.js  
+src/**/*.js.map  
+src/**/*.d.ts  
+src/**/*.d.ts.map 
