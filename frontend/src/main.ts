@@ -64,7 +64,7 @@ function renderLoading() {
   `;
 }
 
-function renderEmptyState(message: string, isError = false) {
+function renderEmptyState(message: string, isError = false, isRunning = false) {
   appDiv.innerHTML = `
     <div class="container fade-in">
       <header class="header">
@@ -79,10 +79,12 @@ function renderEmptyState(message: string, isError = false) {
         </div>
       </header>
       <div class="empty-state fade-in">
-        <div class="empty-state__icon">${isError ? '⚠️' : '📊'}</div>
-        <h2 class="empty-state__title">${isError ? 'Error Loading Data' : 'No Data Available'}</h2>
-        <p class="empty-state__text">${message}</p>
-        <button class="btn btn--primary" id="btn-trigger">Run Pipeline Now</button>
+        <div class="empty-state__icon">${isError ? '⚠️' : (isRunning ? '⏳' : '📊')}</div>
+        <h2 class="empty-state__title">${isError ? 'Error Loading Data' : (isRunning ? 'Analysis in Progress...' : 'No Data Available')}</h2>
+        <p class="empty-state__text">${isRunning ? 'The backend is currently scraping reviews and running the AI analysis. This takes 1-2 minutes. Please wait...' : message}</p>
+        <button class="btn btn--primary" id="btn-trigger" ${isRunning ? 'disabled' : ''}>
+          ${isRunning ? '<div class="btn__spinner"></div> Running Pipeline...' : 'Run Pipeline Now'}
+        </button>
       </div>
     </div>
   `;
@@ -287,9 +289,9 @@ async function init() {
       renderDashboard(data, status);
     } else {
       if (reportRes.status === 404) {
-        renderEmptyState('The pipeline hasn\'t run yet. Trigger a manual run to generate the first report.');
+        renderEmptyState('The pipeline hasn\'t run yet. Trigger a manual run to generate the first report.', false, status.pipelineRunning);
       } else {
-        renderEmptyState('Failed to load report data from the server.', true);
+        renderEmptyState('Failed to load report data from the server.', true, status.pipelineRunning);
       }
     }
   } catch (err) {
