@@ -23,7 +23,7 @@ dotenv.config();
 // ─── Configuration ────────────────────────────────────────────────────────────
 
 const PORT = parseInt(process.env.PORT || '3000', 10);
-const CRON_SCHEDULE = process.env.CRON_SCHEDULE || '0 9 * * 1';
+const CRON_SCHEDULE = process.env.CRON_SCHEDULE || '0 9 * * *';
 const CRON_TIMEZONE = process.env.CRON_TIMEZONE || 'Asia/Kolkata';
 const API_SECRET = process.env.API_SECRET_KEY || '';
 

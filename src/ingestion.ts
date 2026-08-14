@@ -9,8 +9,8 @@ export interface Review {
   text: string;
 }
 
-// 12 weeks in milliseconds
-const TWELVE_WEEKS_MS = 12 * 7 * 24 * 60 * 60 * 1000;
+// 1 week in milliseconds (since pipeline runs daily now)
+const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
 function isReviewValid(title: string, text: string): boolean {
   const fullText = `${title} ${text}`.trim();
@@ -33,7 +33,7 @@ function isReviewValid(title: string, text: string): boolean {
 }
 
 export async function fetchPlayStoreReviews(appId: string, country: string = 'us'): Promise<Review[]> {
-  const cutoffDate = new Date(Date.now() - TWELVE_WEEKS_MS);
+  const cutoffDate = new Date(Date.now() - ONE_WEEK_MS);
   
   console.log(`Fetching Google Play reviews for ${appId}...`);
   // Note: gplay.reviews can fetch up to a limit or paginate. 
@@ -43,7 +43,7 @@ export async function fetchPlayStoreReviews(appId: string, country: string = 'us
     // @ts-ignore - The 'sort' property is incorrectly typed in google-play-scraper as an enum value instead of the enum object
     sort: gplay.sort.NEWEST,
     country: country,
-    num: 5000 // Fetch up to 5000 reviews to ensure we cover 12 weeks
+    num: 500 // Fetch up to 500 reviews for the weekly window to avoid rate-limit hangs
   });
 
   const reviews: Review[] = [];
@@ -64,12 +64,12 @@ export async function fetchPlayStoreReviews(appId: string, country: string = 'us
     }
   }
 
-  console.log(`Found ${reviews.length} Google Play reviews in the last 12 weeks.`);
+  console.log(`Found ${reviews.length} Google Play reviews in the last 1 week.`);
   return reviews;
 }
 
 export async function fetchAppStoreReviews(appId: string, country: string = 'us'): Promise<Review[]> {
-  const cutoffDate = new Date(Date.now() - TWELVE_WEEKS_MS);
+  const cutoffDate = new Date(Date.now() - ONE_WEEK_MS);
   let page = 1;
   const reviews: Review[] = [];
   
@@ -103,7 +103,7 @@ export async function fetchAppStoreReviews(appId: string, country: string = 'us'
         
         // Stop paginating if we reach reviews older than our cutoff
         if (reviewDate < cutoffDate) {
-          console.log(`Found ${reviews.length} Apple App Store reviews in the last 12 weeks.`);
+          console.log(`Found ${reviews.length} Apple App Store reviews in the last 1 week.`);
           return reviews;
         }
 
