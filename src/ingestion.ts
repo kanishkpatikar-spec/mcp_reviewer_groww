@@ -9,8 +9,8 @@ export interface Review {
   text: string;
 }
 
-// 1 week in milliseconds (since pipeline runs daily now)
-const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+// 12 weeks in milliseconds to fetch a much larger pool of reviews
+const TIME_WINDOW_MS = 12 * 7 * 24 * 60 * 60 * 1000;
 
 function isReviewValid(title: string, text: string): boolean {
   const fullText = `${title} ${text}`.trim();
@@ -33,17 +33,17 @@ function isReviewValid(title: string, text: string): boolean {
 }
 
 export async function fetchPlayStoreReviews(appId: string, country: string = 'us'): Promise<Review[]> {
-  const cutoffDate = new Date(Date.now() - ONE_WEEK_MS);
+  const cutoffDate = new Date(Date.now() - TIME_WINDOW_MS);
   
   console.log(`Fetching Google Play reviews for ${appId}...`);
   // Note: gplay.reviews can fetch up to a limit or paginate. 
-  // For simplicity, we fetch a large chunk of newest reviews and filter by date.
+  // We fetch a large chunk of newest reviews to build a robust pool.
   const rawReviews = await gplay.reviews({
     appId: appId,
     // @ts-ignore - The 'sort' property is incorrectly typed in google-play-scraper as an enum value instead of the enum object
     sort: gplay.sort.NEWEST,
     country: country,
-    num: 500 // Fetch up to 500 reviews for the weekly window to avoid rate-limit hangs
+    num: 3000 // Fetch up to 3000 reviews to have a wide variety
   });
 
   const reviews: Review[] = [];
@@ -64,12 +64,12 @@ export async function fetchPlayStoreReviews(appId: string, country: string = 'us
     }
   }
 
-  console.log(`Found ${reviews.length} Google Play reviews in the last 1 week.`);
+  console.log(`Found ${reviews.length} Google Play reviews in the last 12 weeks.`);
   return reviews;
 }
 
 export async function fetchAppStoreReviews(appId: string, country: string = 'us'): Promise<Review[]> {
-  const cutoffDate = new Date(Date.now() - ONE_WEEK_MS);
+  const cutoffDate = new Date(Date.now() - TIME_WINDOW_MS);
   let page = 1;
   const reviews: Review[] = [];
   
@@ -142,6 +142,19 @@ export async function fetchAllReviews(playStoreId: string, appStoreId: string, c
     })
   ]);
   
-  // Merge and sort newest to oldest
-  return [...playReviews, ...appReviews].sort((a, b) => b.date.getTime() - a.date.getTime());
+  // Merge reviews
+  const allReviews = [...playReviews, ...appReviews];
+  
+  // Shuffle the reviews to ensure we get a random dynamic subset on every run
+  for (let i = allReviews.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [allReviews[i], allReviews[j]] = [allReviews[j], allReviews[i]];
+  }
+  
+  // Select a random sample of up to 150 reviews to keep pipeline fast and reports diverse
+  const sampleSize = Math.min(allReviews.length, 150);
+  const sampledReviews = allReviews.slice(0, sampleSize);
+  
+  // Sort the selected sample by date, newest first
+  return sampledReviews.sort((a, b) => b.date.getTime() - a.date.getTime());
 }
