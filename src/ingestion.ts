@@ -148,7 +148,9 @@ export async function fetchAllReviews(playStoreId: string, appStoreId: string, c
   // Shuffle the reviews to ensure we get a random dynamic subset on every run
   for (let i = allReviews.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [allReviews[i], allReviews[j]] = [allReviews[j], allReviews[i]];
+    const temp = allReviews[i]!;
+    allReviews[i] = allReviews[j]!;
+    allReviews[j] = temp;
   }
   
   // Select a random sample of up to 150 reviews to keep pipeline fast and reports diverse
